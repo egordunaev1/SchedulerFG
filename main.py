@@ -87,13 +87,16 @@ def run_pending():
 
 @bot.message_handler(content_types=["text"])
 def handle_text(message: telebot.types.Message):
-    text = str(message.text)
-    if text.startswith("Удалить;") and message.from_user.id == admin_id:
-        delete_action(text, message.chat.id)
-    elif text.startswith("Создать;") and message.from_user.id == admin_id:
-        create_action(text, message.chat.id)
-    else:
-        action_done(text, message.chat.id, message.from_user.id)
+    try:
+        text = str(message.text)
+        if text.startswith("Удалить;") and message.from_user.id == admin_id:
+            delete_action(text, message.chat.id)
+        elif text.startswith("Создать;") and message.from_user.id == admin_id:
+            create_action(text, message.chat.id)
+        else:
+            action_done(text, message.chat.id, message.from_user.id)
+    except:
+        bot.send_message(message.chat.id, f"Ошибка: {text}")
 
 threading.Thread(target=run_pending).start()
 bot.polling(none_stop=True, interval=0)
