@@ -93,7 +93,7 @@ def handle_text(message: telebot.types.Message):
     elif text.startswith("Создать;") and message.from_user.id == admin_id:
         create_action(text, message.chat.id)
     else:
-        action_done(text, message.from_user.id)
+        action_done(text, message.char.id, message.from_user.id)
 
 threading.Thread(target=run_pending).start()
 bot.polling(none_stop=True, interval=0)
