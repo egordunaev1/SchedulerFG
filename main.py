@@ -19,6 +19,7 @@ class action:
         self.chat = chat_id
         self.gleb = 0
         self.foma = 0
+        self.job = None
         self.create_schedule()
         
         self.bot.send_message(self.chat, f"Создано: {self.name}")
@@ -66,7 +67,10 @@ class action:
 actions = dict()
 
 def create_action(text: str, chat: int):
-    actions[text.split(';')[1]] = action(text, bot, chat)
+    name = text.split(';')[1]
+    if name in actions:
+        delete_action(name, chat)
+    actions[name] = action(text, bot, chat)
 
 def action_done(name: str, chat: int, user: int):
     if name not in actions:
