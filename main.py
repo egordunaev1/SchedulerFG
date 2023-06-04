@@ -23,6 +23,13 @@ class action:
         self.create_schedule()
         
         self.bot.send_message(self.chat, f"Создано: {self.name}")
+        
+    def penalty(self, user):
+        if user == gleb_id:
+            self.gleb += 1
+        else:
+            self.foma += 1
+        self.bot.send_message(self.chat, "Долг увеличен")
     
     def create_schedule(self):
         if not self.when:
@@ -57,8 +64,10 @@ class action:
 
         if user == foma_id:
             self.foma += 1
-        else:
+        elif user == gleb_id:
             self.gleb += 1
+            
+        self.bot.send_message(self.chat, "Засчитано")
     
     def __del__(self):
         schedule.cancel_job(self.job)
@@ -97,10 +106,15 @@ def handle_text(message: telebot.types.Message):
             delete_action(text, message.chat.id)
         elif text.startswith("Создать;") and message.from_user.id == admin_id:
             create_action(text, message.chat.id)
-        else:
-            action_done(text, message.chat.id, message.from_user.id)
     except:
         bot.send_message(message.chat.id, f"Ошибка: {text}")
+        
+@bot.message_handler(content_types=["photo"])
+def handle_photo(message: telebot.types.Message):
+    try:
+        action_done(message.caption, message.chat.id, message.from_user.id)
+    except:
+        bot.send_message(message.chat.id, f"Ошибка: {message.caption}")
 
 threading.Thread(target=run_pending).start()
 bot.polling(none_stop=True, interval=0)
