@@ -117,4 +117,4 @@ def handle_photo(message: telebot.types.Message):
         bot.send_message(message.chat.id, f"Ошибка: {message.caption}")
 
 threading.Thread(target=run_pending).start()
-bot.polling(none_stop=True, interval=0)
+bot.infinity_polling(timeout=10, long_polling_timeout=5)
